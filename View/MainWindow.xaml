@@ -1,0 +1,267 @@
+﻿<Window x:Class="WPFCalendarWithDB.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WPFCalendarWithDB.ViewModel"
+        xmlns:root="clr-namespace:WPFCalendarWithDB"
+        Title="Calendar" Height="800" Width="1200"
+        MinHeight="600" MinWidth="800">
+
+    <Window.DataContext>
+        <local:MainViewModel x:Name="mainViewModel"/>
+    </Window.DataContext>
+
+    <Window.Resources>
+
+        <root:FontSizeConverter x:Key="fontSizeConverter"/>
+
+        <Style TargetType="Button" x:Key="prevNextWeekButton">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Background" Value="{Binding CurrentColorScheme.ButtonBackgroundColor}"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{Binding CurrentColorScheme.IsMouseOverButtonBackgroundColor}"/>
+                                <Setter Property="BorderBrush" Value="DarkGray"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="{Binding CurrentColorScheme.IsPressedButtonBackgroundColor}"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource fontSizeConverter}, ConverterParameter=4}"/>
+            <Setter Property="Foreground" Value="{Binding CurrentColorScheme.MainFontColor}"/>
+        </Style>
+
+        <Style TargetType="Label" x:Key="weekDayLabelStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Border BorderBrush="LightGray" 
+                                BorderThickness="1" 
+                                Background="{Binding CurrentColorScheme.WeekDayLabelBackgroundColor}"
+                                Margin="0,0,2,0" 
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource fontSizeConverter}, ConverterParameter=10}"/>
+            <Setter Property="Foreground" Value="{Binding CurrentColorScheme.MainFontColor}"/>
+        </Style>
+
+        <Style TargetType="Label" x:Key="weekLabelStyle">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Border BorderBrush="LightGray" 
+                                BorderThickness="1" 
+                                Background="{Binding CurrentColorScheme.WeekLabelBackgroundColor}"
+                                Margin="0,0,0,2" 
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource fontSizeConverter}, ConverterParameter=4}"/>
+            <Setter Property="Foreground" Value="{Binding CurrentColorScheme.MainFontColor}"/>
+        </Style>
+
+        <Style TargetType="Border" x:Key="dateBorderStyle">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Margin" Value="2,2,2,2"/>
+        </Style>
+
+        <Style TargetType="StackPanel" x:Key="dateStackPanelStyle">
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+        </Style>
+
+        <Style TargetType="Label" x:Key="dateLabelStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Border BorderBrush="Black" 
+                                BorderThickness="1" 
+                                CornerRadius="3,3,0,0"
+                                Padding="5,0,0,0">
+                            <ContentPresenter/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="FontSize" Value="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource fontSizeConverter}, ConverterParameter=10}"/>
+            <Setter Property="Foreground" Value="{Binding MainFontColor}"/>
+            <Setter Property="Margin" Value="0,0,0,1"/>
+        </Style>
+
+        <Style TargetType="ScrollViewer" x:Key="appointmentsScrollViewerStyle">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+        </Style>
+
+        <Style TargetType="Border" x:Key="appointmentsBorderStyle">
+            <Setter Property="BorderBrush" Value="{Binding AppointmentColor}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="3,3,0,0"/>
+            <Setter Property="Padding" Value="5,0,0,0"/>
+            <Setter Property="Margin" Value="0,0,0,1"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="appointmentTextBlockStyle">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="{Binding AppointmentColor}"/>
+        </Style>
+
+        <Style TargetType="Grid">
+            <Setter Property="TextElement.FontFamily" Value="{Binding CurrentFont}"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <MouseBinding MouseAction="RightClick" Command="{Binding PopupCommand}" />
+    </Window.InputBindings>
+
+    <Grid Name="calendarGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Button Grid.Row="0" Grid.Column="0" 
+                Content="Prev" 
+                Style="{StaticResource prevNextWeekButton}"
+                Command="{Binding GetPrevWeek}"
+                Margin="0,0,2,2"/>
+        <Button Grid.Row="0" Grid.Column="8" 
+                Content="Prev" 
+                Style="{StaticResource prevNextWeekButton}"
+                Command="{Binding GetPrevWeek}"
+                Margin="0,0,0,2"/>
+        <Button Grid.Row="5" Grid.Column="0" 
+                Content="Next" 
+                Style="{StaticResource prevNextWeekButton}"
+                Command="{Binding GetNextWeek}"
+                Margin="0,0,2,0"/>
+        <Button Grid.Row="5" Grid.Column="8" 
+                Content="Next" 
+                Style="{StaticResource prevNextWeekButton}"
+                Command="{Binding GetNextWeek}"/>
+
+        <Label Grid.Row="0" Grid.Column="1" Content="Monday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="0" Grid.Column="2" Content="Tuesday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="0" Grid.Column="3" Content="Wednesday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="0" Grid.Column="4" Content="Thursday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="0" Grid.Column="5" Content="Friday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="0" Grid.Column="6" Content="Saturday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="0" Grid.Column="7" Content="Sunday" Style="{StaticResource weekDayLabelStyle}"/>
+
+        <Label Grid.Row="5" Grid.Column="1" Content="Monday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="5" Grid.Column="2" Content="Tuesday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="5" Grid.Column="3" Content="Wednesday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="5" Grid.Column="4" Content="Thursday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="5" Grid.Column="5" Content="Friday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="5" Grid.Column="6" Content="Saturday" Style="{StaticResource weekDayLabelStyle}"/>
+        <Label Grid.Row="5" Grid.Column="7" Content="Sunday" Style="{StaticResource weekDayLabelStyle}"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="{Binding WeeksList[0]}" Style="{StaticResource weekLabelStyle}"/>
+        <Label Grid.Row="2" Grid.Column="0" Content="{Binding WeeksList[1]}" Style="{StaticResource weekLabelStyle}"/>
+        <Label Grid.Row="3" Grid.Column="0" Content="{Binding WeeksList[2]}" Style="{StaticResource weekLabelStyle}"/>
+        <Label Grid.Row="4" Grid.Column="0" Content="{Binding WeeksList[3]}" Style="{StaticResource weekLabelStyle}"/>
+
+        <Label Grid.Row="1" Grid.Column="8" Content="{Binding WeeksList[0]}" Style="{StaticResource weekLabelStyle}"/>
+        <Label Grid.Row="2" Grid.Column="8" Content="{Binding WeeksList[1]}" Style="{StaticResource weekLabelStyle}"/>
+        <Label Grid.Row="3" Grid.Column="8" Content="{Binding WeeksList[2]}" Style="{StaticResource weekLabelStyle}"/>
+        <Label Grid.Row="4" Grid.Column="8" Content="{Binding WeeksList[3]}" Style="{StaticResource weekLabelStyle}"/>
+
+        <ItemsControl x:Name="datesGrid"
+                  Grid.Row="1" Grid.Column="1" 
+                  Grid.RowSpan="{Binding WeeksCount}" Grid.ColumnSpan="{Binding WeekDaysCount}" 
+                  ItemsSource="{Binding DaysList}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="4" Columns="7"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ScrollViewer Style="{StaticResource appointmentsScrollViewerStyle}">
+                        <Border Style="{StaticResource dateBorderStyle}">
+                            <StackPanel Style="{StaticResource dateStackPanelStyle}" Background="{Binding DateColor}" 
+                                        PreviewMouseLeftButtonDown="DoubleClickAppointmentHandler">
+                                <Label Content="{Binding DateText}" Style="{StaticResource dateLabelStyle}"/>
+                                <ItemsControl ItemsSource="{Binding AppointmentsList}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource appointmentsBorderStyle}">
+                                                <TextBlock Name="appointmentTextBlock" Text="{Binding AppointmentText}" Style="{StaticResource appointmentTextBlockStyle}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </ScrollViewer>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <Popup Placement="Mouse" x:Name="popup" IsOpen="{Binding IsPopup}">
+            <Popup.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="GhostWhite" />
+                    <Setter Property="BorderBrush" Value="Black" />
+                    <Setter Property="BorderThickness" Value="2" />
+                    <Setter Property="Padding" Value="5" />
+                </Style>
+            </Popup.Resources>
+            <Border>
+                <StackPanel>
+                    <Label Content="Color Schemes:" />
+                    <ComboBox ItemsSource="{Binding ColorSchemesList}" SelectedValue="{Binding CurrentColorScheme}"
+                              DisplayMemberPath="SchemeName" SelectedIndex="0" />
+                    <Label Content="Fonts:" />
+                    <ComboBox ItemsSource="{Binding FontsList}" SelectedValue="{Binding CurrentFont}" SelectedIndex="0" />
+                </StackPanel>
+            </Border>
+        </Popup>
+
+    </Grid>
+</Window>
