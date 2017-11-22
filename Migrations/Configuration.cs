@@ -9,7 +9,7 @@ namespace WPFCalendarWithDB.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(WPFCalendarWithDB.Model.StorageContext context)
