@@ -17,6 +17,7 @@ namespace WPFCalendarWithDB.ViewModel
         private String _appointmentStart;
         private String _appointmentEnd;
         private String _appointmentTitle;
+        private String _appointmentDescription;
         private ICommand _removeAppointmentCommand;
         private ICommand _closeCommand;
 
@@ -37,8 +38,8 @@ namespace WPFCalendarWithDB.ViewModel
                     case "AppointmentTitle":
                         if (String.IsNullOrEmpty(AppointmentTitle))
                             result = "Title field must not be empty!";
-                        else if (AppointmentTitle.Length > 30)
-                            result = "Title must be at most 30 characters in length!";
+                        else if (AppointmentTitle.Length > 16)
+                            result = "Title must be at most 16 characters in length!";
                         break;
                     case "AppointmentStart":
                         if (String.IsNullOrEmpty(AppointmentStart))
@@ -51,6 +52,12 @@ namespace WPFCalendarWithDB.ViewModel
                             result = "End time field must not be empty!";
                         else if (!DateTime.TryParseExact(AppointmentEnd, timeFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out tempDate))
                             result = "Required format: HH:mm";
+                        break;
+                    case "AppointmentDescription":
+                        if (String.IsNullOrEmpty(AppointmentDescription))
+                            result = "Title field must not be empty!";
+                        else if (AppointmentDescription.Length > 50)
+                            result = "Title must be at most 50 characters in length!";
                         break;
                 }
                 return result;
@@ -69,6 +76,7 @@ namespace WPFCalendarWithDB.ViewModel
                 AppointmentTitle = _appointment.Title;
                 AppointmentStart = _appointment.Start.ToString("HH:mm");
                 AppointmentEnd = _appointment.End.ToString("HH:mm");
+                AppointmentDescription = _appointment.Description;
             }
         }
 
@@ -121,6 +129,19 @@ namespace WPFCalendarWithDB.ViewModel
             {
                 _appointmentTitle = value;
                 OnPropertyChanged("AppointmentTitle");
+            }
+        }
+
+        public String AppointmentDescription
+        {
+            get
+            {
+                return _appointmentDescription;
+            }
+            set
+            {
+                _appointmentDescription = value;
+                OnPropertyChanged("AppointmentDescription");
             }
         }
 
@@ -190,6 +211,7 @@ namespace WPFCalendarWithDB.ViewModel
             _appointment.Title = _appointmentTitle;
             _appointment.Start = startTime;
             _appointment.End = endTime;
+            _appointment.Description = _appointmentDescription;
         }
 
         public void ModifyAppointment()
@@ -199,6 +221,7 @@ namespace WPFCalendarWithDB.ViewModel
             _appointment.Title = _appointmentTitle;
             _appointment.Start = startTime;
             _appointment.End = endTime;
+            _appointment.Description = _appointmentDescription;
         }
 
         private DateTime GetTimeFromString(String timeString)

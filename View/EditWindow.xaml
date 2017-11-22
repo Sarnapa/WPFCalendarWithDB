@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:WPFCalendarWithDB.ViewModel"
         Title="Edit Window"
         Background="GhostWhite"
-        Height="300" Width="500"
+        Height="300" Width="600"
         ResizeMode="CanMinimize">
 
     <Window.DataContext>
@@ -74,6 +74,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -83,6 +84,7 @@
         <Label Content="Pass appointment title:" Style="{StaticResource headerLabelStyle}"/>
         <Label Grid.Row="1" Content="Pass start time:" Style="{StaticResource headerLabelStyle}"/>
         <Label Grid.Row="2"  Content="Pass end time:" Style="{StaticResource headerLabelStyle}"/>
+        <Label Grid.Row="3"  Content="Pass appointment description:" Style="{StaticResource headerLabelStyle}"/>
 
         <TextBox Grid.Row="0" Grid.Column="1" Name="appointmentTitleTextBox"
                  Style="{StaticResource appointmentTextBoxStyle}"
@@ -93,8 +95,11 @@
         <TextBox Grid.Row="2" Grid.Column="1" Name="appointmentEndTextBox"
                  Style="{StaticResource appointmentTextBoxStyle}"
                  Text="{Binding AppointmentEnd, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Name="appointmentDescriptionBox"
+                 Style="{StaticResource appointmentTextBoxStyle}"
+                 Text="{Binding AppointmentDescription, UpdateSourceTrigger=LostFocus, ValidatesOnDataErrors=True}"/>
 
-        <StackPanel Grid.Row="3" Grid.Column="1" Style="{StaticResource buttonsStackPanelStyle}">
+        <StackPanel Grid.Row="4" Grid.Column="1" Style="{StaticResource buttonsStackPanelStyle}">
             <Button Name="removeAppointmentButton" Content="Remove appointment" Style="{StaticResource removeAppointmentButtonStyle}"
                     Command="{Binding RemoveAppointmentCommand}"/>
             <Button Name="addModifyAppointmentButton" Content="Add appointment" Style="{StaticResource addModifyAppointmentButtonStyle}"

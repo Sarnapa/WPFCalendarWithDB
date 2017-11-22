@@ -82,6 +82,14 @@
     <Compile Include="Migrations\201711220007575_LengthConstaintsMigration.Designer.cs">
       <DependentUpon>201711220007575_LengthConstaintsMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711220101339_PersonNotNullMigration.cs" />
+    <Compile Include="Migrations\201711220101339_PersonNotNullMigration.Designer.cs">
+      <DependentUpon>201711220101339_PersonNotNullMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201711220118054_AppointmentsConstraintsMigration.cs" />
+    <Compile Include="Migrations\201711220118054_AppointmentsConstraintsMigration.Designer.cs">
+      <DependentUpon>201711220118054_AppointmentsConstraintsMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Appointment.cs" />
     <Compile Include="Model\AppointmentModel.cs" />
@@ -121,6 +129,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711220007575_LengthConstaintsMigration.resx">
       <DependentUpon>201711220007575_LengthConstaintsMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711220101339_PersonNotNullMigration.resx">
+      <DependentUpon>201711220101339_PersonNotNullMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711220118054_AppointmentsConstraintsMigration.resx">
+      <DependentUpon>201711220118054_AppointmentsConstraintsMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

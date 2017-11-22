@@ -30,11 +30,11 @@ namespace WPFCalendarWithDB.Model
         { 
             get
             {
-                return _appointment.StartTime;
+                return ConvertToDateTime(_appointment.StartTime);
             }
             set
             {
-                _appointment.StartTime = value;
+                _appointment.StartTime = ConvertToTimeSpan(value);
                 OnPropertyChanged("Start");
                 OnPropertyChanged("AppointmentText");
             }
@@ -43,11 +43,11 @@ namespace WPFCalendarWithDB.Model
         {
             get
             {
-                return _appointment.EndTime;
+                return ConvertToDateTime(_appointment.EndTime);
             }
             set
             {
-                _appointment.EndTime = value;
+                _appointment.EndTime = ConvertToTimeSpan(value);
                 OnPropertyChanged("End");
                 OnPropertyChanged("AppointmentText");
             }
@@ -63,6 +63,18 @@ namespace WPFCalendarWithDB.Model
                 _appointment.Title = value;
                 OnPropertyChanged("Title");
                 OnPropertyChanged("AppointmentText");
+            }
+        }
+        public String Description
+        {
+            get
+            {
+                return _appointment.Description;
+            }
+            set
+            {
+                _appointment.Description = value;
+                OnPropertyChanged("Description");
             }
         }
 
@@ -92,12 +104,13 @@ namespace WPFCalendarWithDB.Model
         public AppointmentModel()
         { }
         
-        public AppointmentModel(DateTime date, DateTime start, DateTime end, String title)
+        public AppointmentModel(DateTime date, DateTime start, DateTime end, String title, String description)
         {
             Date = date;
             Start = start;
             End = end;
             Title = title;
+            Description = description;
         }
 
         private void OnPropertyChanged(String propertyName)
@@ -107,6 +120,16 @@ namespace WPFCalendarWithDB.Model
             {
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
+        }
+
+        private DateTime ConvertToDateTime(TimeSpan time)
+        {
+            return Date + time;
+        }
+
+        private static TimeSpan ConvertToTimeSpan(DateTime time)
+        {
+            return time.TimeOfDay;
         }
     }
 }
