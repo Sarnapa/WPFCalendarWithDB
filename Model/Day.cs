@@ -17,6 +17,8 @@ namespace WPFCalendarWithDB.Model
         private String _dateColor;
         private String _appointmentColor;
         private String _mainFontColor;
+        private String _userID;
+        private Storage _storage = new Storage();
 
         public DateTime Date
         {
@@ -80,46 +82,49 @@ namespace WPFCalendarWithDB.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Day(DateTime date, String dateColor, String appointmentColor, String mainFontColor)
+        public Day(DateTime date, String dateColor, String appointmentColor, String mainFontColor, String userID)
         {
             Date = date;
             DateColor = dateColor;
             _appointmentColor = appointmentColor;
             MainFontColor = mainFontColor;
-            AppointmentsList = new ObservableCollection<AppointmentModel>();
+            _userID = userID;
+            AppointmentsList = GetDayAppointments();
         }
 
         public void AddAppointment(AppointmentModel e)
         {
             e.AppointmentColor = _appointmentColor;
             _appointmentsList.Add(e);
+            e.SaveNewAppointmentInDB(_userID);
+            AppointmentsList = new ObservableCollection<AppointmentModel>(_appointmentsList.OrderBy(o => o.Start));
+        }
+
+        public void ModifyAppointment(AppointmentModel e)
+        {
+            e.SaveModifiedAppointmentInDB();
             AppointmentsList = new ObservableCollection<AppointmentModel>(_appointmentsList.OrderBy(o => o.Start));
         }
 
         public void RemoveAppointment(AppointmentModel e)
         {
+            e.RemoveAppointmentInDB();
             _appointmentsList.Remove(e);
         }
 
-        /*
-        private ObservableCollection<EventModel> GetDayEvents(List<EventModel> allEventsList)
+        private ObservableCollection<AppointmentModel> GetDayAppointments()
         {
-            ObservableCollection<EventModel> eventsList = new ObservableCollection<EventModel>();
-            if (allEventsList != null)
+            ObservableCollection<AppointmentModel> result = new ObservableCollection<AppointmentModel>();
+            List<Appointment> appointmentsDBList = _storage.GetDayAppointments(_userID, _date);
+            foreach(Appointment appointment in appointmentsDBList)
             {
-                foreach (EventModel e in allEventsList)
-                {
-                    // Date.Date - "pozbywamy się" godziny na wszelki wypadek
-                    if (e.Date.Date.CompareTo(Date.Date) == 0)
-                    {
-                        e.EventColor = _eventColor;
-                        eventsList.Add(e);
-                    }
-                }
+                AppointmentModel newAppointmentModel = new AppointmentModel(appointment);
+                newAppointmentModel.AppointmentColor = _appointmentColor;
+                result.Add(newAppointmentModel);
             }
-            eventsList = new ObservableCollection<EventModel>(eventsList.OrderBy(o => o.Start));
-            return eventsList;
-        }*/
+            result = new ObservableCollection<AppointmentModel>(result.OrderBy(o => o.Start));
+            return result;
+        }
 
         private void OnPropertyChanged(String propertyName)
         {

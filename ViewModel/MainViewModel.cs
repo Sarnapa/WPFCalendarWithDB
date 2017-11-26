@@ -18,12 +18,12 @@ namespace WPFCalendarWithDB.ViewModel
         private static readonly int _weeksCount = 4;
         private List<Day> _daysList = new List<Day>();
         private List<String> _weeksList = new List<string>();
-        //private List<EventModel> _allEventsList = new List<EventModel>();
         private Boolean _isPopup;
         private List<ColorScheme> _colorSchemesList;
         private ColorScheme _currentColorScheme;
         private List<String> _fontsList;
         private String _currentFont;
+        private String _userID;
         private ICommand _getPrevWeek;
         private ICommand _getNextWeek;
         private ICommand _popupCommand;
@@ -174,7 +174,7 @@ namespace WPFCalendarWithDB.ViewModel
             };
             CurrentFont = _fontsList[0];
 
-            /*_allEventsList = (List<EventModel>)SerializationService.ReadSource();*/
+            _userID = GetUserIDFromArgs();
             DateTime firstDateOfWeek = CalendarService.GetFirstDateOfWeek(DateTime.Now.Date);
             DaysList = GetDaysList(firstDateOfWeek);
             WeeksList = GetWeeksList(firstDateOfWeek);
@@ -201,10 +201,10 @@ namespace WPFCalendarWithDB.ViewModel
             {
                 if (date.CompareTo(DateTime.Now.Date) == 0)
                     daysList.Add(new Day(date, CurrentColorScheme.TodayCellBackgroundColor, CurrentColorScheme.AppointmentColor,
-                        CurrentColorScheme.MainFontColor));
+                        CurrentColorScheme.MainFontColor, _userID));
                 else
                     daysList.Add(new Day(date, CurrentColorScheme.DayCellBackgroundColor, CurrentColorScheme.AppointmentColor,
-                        CurrentColorScheme.MainFontColor));
+                        CurrentColorScheme.MainFontColor, _userID));
                 date = date.AddDays(1);
             }
             return daysList;
@@ -229,14 +229,23 @@ namespace WPFCalendarWithDB.ViewModel
             day.AddAppointment(e);
         }
 
-        public void ModifyAppointment(Day day)
+        public void ModifyAppointment(Day day, AppointmentModel e)
         {
-            day.AppointmentsList = new ObservableCollection<AppointmentModel>(day.AppointmentsList.OrderBy(o => o.Start));
+            day.ModifyAppointment(e);
         }
 
         public void RemoveAppointment(Day day, AppointmentModel e)
         {
             day.RemoveAppointment(e);
+        }
+
+        private static String GetUserIDFromArgs()
+        {
+            if (Environment.GetCommandLineArgs().Count() > 1)
+                return Environment.GetCommandLineArgs()[1];
+            else
+                // some kind of protection
+                return "user1";
         }
 
         // Commands Actions

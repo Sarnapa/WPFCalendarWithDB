@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace WPFCalendarWithDB.Model
 {
     // kontekst bazy danych - obiekty odpowiadające fizycznej bazy danych
-    public class StorageContext : DbContext
+    class StorageContext : DbContext
     {
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Person> Persons { get; set; }

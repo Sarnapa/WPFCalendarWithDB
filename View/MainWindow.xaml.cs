@@ -66,7 +66,7 @@ namespace WPFCalendarWithDB.View
                             else
                             {
                                 editVM.ModifyAppointment();
-                                mainVM.ModifyAppointment(currentDay);
+                                mainVM.ModifyAppointment(currentDay, editVM.Appointment);
                             }
                         }
                     }

@@ -12,6 +12,7 @@ namespace WPFCalendarWithDB.Model
     {
         private Appointment _appointment = new Appointment();
         private String _appointmentColor;
+        private Storage _storage = new Storage();
 
         public DateTime Date 
         { 
@@ -103,7 +104,12 @@ namespace WPFCalendarWithDB.Model
 
         public AppointmentModel()
         { }
-        
+
+        public AppointmentModel(Appointment appointment)
+        {
+            _appointment = appointment;
+        }
+
         public AppointmentModel(DateTime date, DateTime start, DateTime end, String title, String description)
         {
             Date = date;
@@ -111,6 +117,21 @@ namespace WPFCalendarWithDB.Model
             End = end;
             Title = title;
             Description = description;
+        }
+
+        public void SaveNewAppointmentInDB(String userID)
+        {
+            _storage.CreateAppointment(userID, _appointment);
+        }
+
+        public void SaveModifiedAppointmentInDB()
+        {
+            _storage.UpdateAppointment(_appointment);
+        }
+
+        public void RemoveAppointmentInDB()
+        {
+            _storage.DeleteAppointment(_appointment);
         }
 
         private void OnPropertyChanged(String propertyName)

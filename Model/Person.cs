@@ -10,6 +10,7 @@ namespace WPFCalendarWithDB.Model
 {
     public class Person
     {
+        [Key]
         public Guid PersonId { get; set; }
         [MaxLength(16), Required]
         public string FirstName { get; set; }
@@ -18,5 +19,10 @@ namespace WPFCalendarWithDB.Model
         [MaxLength(10), Required]
         public string UserID { get; set; }
         public virtual List<Attendance> Attendances { get; set; }
+
+        public Person()
+        {
+            PersonId = Guid.NewGuid();
+        }
     }
 }
