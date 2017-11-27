@@ -39,6 +39,7 @@ namespace WPFCalendarWithDB.Model
                 attendance.AppointmentId = appointment.AppointmentId;
                 db.Attendances.Add(attendance);
                 db.SaveChanges();
+                Logger.Log.Info("Saved new appointment to database.");
             }
         }
         
@@ -58,15 +59,20 @@ namespace WPFCalendarWithDB.Model
                     try
                     {
                         db.SaveChanges();
+                        Logger.Log.Info("Saved modified appointment to database.");
                     }
                     // ktos wczesniej nadpisal dane, a my ich nie pobralismy - nie akceptujemy naszej zmiany
                     catch (DbUpdateConcurrencyException)
                     {
+                        Logger.Log.Error("Modifying appointment failure due to overwriting data by another user.");
                         throw new Exception("Modifying appointment failure due to overwriting data by another user.");
                     }
                 }
                 else
+                {
+                    Logger.Log.Error("Modifying appointment failure due to removing appointment by another user.");
                     throw new Exception("Modifying appointment failure due to removing appointment by another user.");
+                }
 
             }
         }
@@ -83,14 +89,19 @@ namespace WPFCalendarWithDB.Model
                     try
                     {
                         db.SaveChanges();
+                        Logger.Log.Info("Remove appointment from database.");
                     }
                     catch (DbUpdateConcurrencyException)
                     {
+                        Logger.Log.Error("Removing appointment failure due to overwriting data by another user.");
                         throw new Exception("Removing appointment failure due to overwriting data by another user.");
                     }
                 }
                 else
+                {
+                    Logger.Log.Error("Removing appointment failure due to removing appointment by another user.");
                     throw new Exception("Removing appointment failure due to removing appointment by another user.");
+                }
 
             }
         }

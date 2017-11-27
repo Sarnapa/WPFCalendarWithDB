@@ -90,7 +90,7 @@ namespace WPFCalendarWithDB.Model
             _appointmentColor = appointmentColor;
             MainFontColor = mainFontColor;
             _userID = userID;
-            AppointmentsList = GetDayAppointments();
+            GetSortedDayAppointmentsList();
         }
 
         public void AddAppointment(AppointmentModel e)
@@ -149,6 +149,8 @@ namespace WPFCalendarWithDB.Model
         {
             AppointmentsList = GetDayAppointments();
             AppointmentsList = new ObservableCollection<AppointmentModel>(_appointmentsList.OrderBy(o => o.Start));
+            if(AppointmentsList.Count > 0)
+                Logger.Log.Info("Get " + AppointmentsList.Count + " appointments from DB for date: " + _date.ToString("dd.MM.yyyy"));
         }
 
         private void OnPropertyChanged(String propertyName)
