@@ -10,7 +10,7 @@ using System.Diagnostics;
 
 namespace WPFCalendarWithDB.Model
 {
-    class Storage
+    public class Storage
     {
         public List<Appointment> GetDayAppointments(String userID, DateTime day)
         {
