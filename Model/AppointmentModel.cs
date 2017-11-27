@@ -126,7 +126,7 @@ namespace WPFCalendarWithDB.Model
 
         public void SaveModifiedAppointmentInDB()
         {
-            _storage.UpdateAppointment(_appointment);
+           _storage.UpdateAppointment(_appointment);
         }
 
         public void RemoveAppointmentInDB()

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -94,22 +95,40 @@ namespace WPFCalendarWithDB.Model
 
         public void AddAppointment(AppointmentModel e)
         {
-            e.AppointmentColor = _appointmentColor;
-            _appointmentsList.Add(e);
             e.SaveNewAppointmentInDB(_userID);
-            AppointmentsList = new ObservableCollection<AppointmentModel>(_appointmentsList.OrderBy(o => o.Start));
+            GetSortedDayAppointmentsList();
         }
 
         public void ModifyAppointment(AppointmentModel e)
         {
-            e.SaveModifiedAppointmentInDB();
-            AppointmentsList = new ObservableCollection<AppointmentModel>(_appointmentsList.OrderBy(o => o.Start));
+            try
+            {
+                e.SaveModifiedAppointmentInDB();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                GetSortedDayAppointmentsList();
+            }
         }
 
         public void RemoveAppointment(AppointmentModel e)
         {
-            e.RemoveAppointmentInDB();
-            _appointmentsList.Remove(e);
+            try
+            {
+                e.RemoveAppointmentInDB();
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                GetSortedDayAppointmentsList();
+            }
         }
 
         private ObservableCollection<AppointmentModel> GetDayAppointments()
@@ -124,6 +143,12 @@ namespace WPFCalendarWithDB.Model
             }
             result = new ObservableCollection<AppointmentModel>(result.OrderBy(o => o.Start));
             return result;
+        }
+
+        private void GetSortedDayAppointmentsList()
+        {
+            AppointmentsList = GetDayAppointments();
+            AppointmentsList = new ObservableCollection<AppointmentModel>(_appointmentsList.OrderBy(o => o.Start));
         }
 
         private void OnPropertyChanged(String propertyName)

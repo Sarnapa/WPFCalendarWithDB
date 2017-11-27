@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -61,12 +62,28 @@ namespace WPFCalendarWithDB.View
                         {
                             if (editVM.IsRemoveAppointment)
                             {
-                                mainVM.RemoveAppointment(currentDay, editVM.Appointment);
+                                try
+                                {
+                                    mainVM.RemoveAppointment(currentDay, editVM.Appointment);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message, "Error",
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
                             }
                             else
                             {
                                 editVM.ModifyAppointment();
-                                mainVM.ModifyAppointment(currentDay, editVM.Appointment);
+                                try
+                                {
+                                    mainVM.ModifyAppointment(currentDay, editVM.Appointment);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message, "Error", 
+                                        MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
                             }
                         }
                     }

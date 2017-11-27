@@ -22,6 +22,8 @@ namespace WPFCalendarWithDB.Model
         public TimeSpan StartTime { get; set; }
         [Column(TypeName = "time"), Required]
         public TimeSpan EndTime { get; set; }
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         public virtual List<Attendance> Attendances { get; set; }
 
         public Appointment()

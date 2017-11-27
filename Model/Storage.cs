@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data.Linq;
 using System.Threading.Tasks;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Diagnostics;
 
 namespace WPFCalendarWithDB.Model
 {
@@ -37,21 +41,33 @@ namespace WPFCalendarWithDB.Model
                 db.SaveChanges();
             }
         }
-
-        public void UpdateAppointment(Appointment newAppointment)
+        
+        public void UpdateAppointment(Appointment appointment)
         {
             using (var db = new StorageContext())
             {
-                var original = db.Appointments.Find(newAppointment.AppointmentId);
+                var original = db.Appointments.Find(appointment.AppointmentId);
                 if (original != null)
                 {
-                    original.AppointmentDate = newAppointment.AppointmentDate;
-                    original.StartTime = newAppointment.StartTime;
-                    original.EndTime = newAppointment.EndTime;
-                    original.Title = newAppointment.Title;
-                    original.Description = newAppointment.Description;
-                    db.SaveChanges();
+                    original.AppointmentDate = appointment.AppointmentDate;
+                    original.StartTime = appointment.StartTime;
+                    original.EndTime = appointment.EndTime;
+                    original.Title = appointment.Title;
+                    original.Description = appointment.Description;
+                    db.Entry(original).OriginalValues["RowVersion"] = appointment.RowVersion;
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    // ktos wczesniej nadpisal dane, a my ich nie pobralismy - nie akceptujemy naszej zmiany
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        throw new Exception("Modifying appointment failure due to overwriting data by another user.");
+                    }
                 }
+                else
+                    throw new Exception("Modifying appointment failure due to removing appointment by another user.");
+
             }
         }
 
@@ -63,8 +79,19 @@ namespace WPFCalendarWithDB.Model
                 if (original != null)
                 {
                     db.Appointments.Remove(original);
-                    db.SaveChanges();
+                    db.Entry(original).OriginalValues["RowVersion"] = appointment.RowVersion;
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        throw new Exception("Removing appointment failure due to overwriting data by another user.");
+                    }
                 }
+                else
+                    throw new Exception("Removing appointment failure due to removing appointment by another user.");
+
             }
         }
     }

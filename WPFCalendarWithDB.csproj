@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -90,6 +91,10 @@
     <Compile Include="Migrations\201711220118054_AppointmentsConstraintsMigration.Designer.cs">
       <DependentUpon>201711220118054_AppointmentsConstraintsMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711261125194_RowVersionInAppointmentTableMigration.cs" />
+    <Compile Include="Migrations\201711261125194_RowVersionInAppointmentTableMigration.Designer.cs">
+      <DependentUpon>201711261125194_RowVersionInAppointmentTableMigration.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\Appointment.cs" />
     <Compile Include="Model\AppointmentModel.cs" />
@@ -135,6 +140,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711220118054_AppointmentsConstraintsMigration.resx">
       <DependentUpon>201711220118054_AppointmentsConstraintsMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711261125194_RowVersionInAppointmentTableMigration.resx">
+      <DependentUpon>201711261125194_RowVersionInAppointmentTableMigration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
