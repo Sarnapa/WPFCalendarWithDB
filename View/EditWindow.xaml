@@ -55,6 +55,8 @@
                             Path=(Validation.HasError)}" Value="false" />
                         <Condition Binding="{Binding ElementName=appointmentEndTextBox,
                             Path=(Validation.HasError)}" Value="false" />
+                        <Condition Binding="{Binding ElementName=appointmentDescriptionBox,
+                            Path=(Validation.HasError)}" Value="false" />
                     </MultiDataTrigger.Conditions>
                 </MultiDataTrigger>
             </Style.Triggers>
